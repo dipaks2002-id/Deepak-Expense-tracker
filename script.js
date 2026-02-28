@@ -11,7 +11,8 @@ function addTransaction() {
     id: Date.now(),
     desc,
     amount: parseFloat(amount),
-    type
+    type,
+    date: new date()
   };
 
   transactions.push(transaction);
@@ -32,19 +33,67 @@ setTimeout(() => {
 
 function render() {
   let list = document.getElementById("list");
-  let balance = 0;
   list.innerHTML = "";
 
+  let income = 0;
+  let expense = 0;
+
   transactions.forEach(t => {
+
     let li = document.createElement("li");
-    li.innerText = t.desc + " - ₹" + t.amount;
+
+    let formattedDate = new Date(t.date || Date.now()).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+
+    li.innerHTML = `
+      <div>
+        <strong>${t.desc}</strong><br>
+        ₹${t.amount}<br>
+        <small>${formattedDate}</small>
+      </div>
+      <button class="delete" onclick="deleteTransaction(${t.id})">X</button>
+    `;
+
     list.appendChild(li);
 
-    if(t.type === "income") balance += t.amount;
-    else balance -= t.amount;
+    if (t.type === "income") income += t.amount;
+    else expense += t.amount;
   });
 
+  let balance = income - expense;
   document.getElementById("balance").innerText = balance;
-}
 
+  // Monthly Profit
+  let now = new Date();
+  let monthlyIncome = 0;
+  let monthlyExpense = 0;
+
+  transactions.forEach(t => {
+    let d = new Date(t.date || Date.now());
+    if (d.getMonth() === now.getMonth() &&
+        d.getFullYear() === now.getFullYear()) {
+
+      if (t.type === "income") monthlyIncome += t.amount;
+      else monthlyExpense += t.amount;
+    }
+  });
+
+  let monthlyProfit = monthlyIncome - monthlyExpense;
+  let profitElement = document.getElementById("monthlyProfit");
+
+  if (profitElement) {
+    profitElement.innerText = monthlyProfit;
+
+    if (monthlyProfit >= 0) {
+      profitElement.classList.remove("negative");
+      profitElement.classList.add("positive");
+    } else {
+      profitElement.classList.remove("positive");
+      profitElement.classList.add("negative");
+    }
+  }
+}
 render();
