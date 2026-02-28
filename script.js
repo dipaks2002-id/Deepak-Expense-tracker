@@ -15,6 +15,17 @@ function addTransaction() {
   };
 
   transactions.push(transaction);
+  let msg = document.getElementById("message");
+
+if (type === "expense") {
+  msg.innerText = "No worries, you will earn more 💪";
+} else {
+  msg.innerText = "Yay, you worked for it, never stop 🚀";
+}
+
+setTimeout(() => {
+  msg.innerText = "";
+}, 3000);
   localStorage.setItem("data", JSON.stringify(transactions));
   render();
 }
