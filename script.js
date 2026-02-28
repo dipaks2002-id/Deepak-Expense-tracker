@@ -12,7 +12,7 @@ function addTransaction() {
     desc,
     amount: parseFloat(amount),
     type,
-    date: new date()
+    date: new Date()
   };
 
   transactions.push(transaction);
