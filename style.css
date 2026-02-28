@@ -82,10 +82,6 @@ button.delete {
 #monthlyProfit.negative {
   color: red;
 }
-body {
-  opacity: 0;
-  animation: fadeInApp 1s ease-in forwards;
-}
 
 @keyframes fadeInApp {
   to {
